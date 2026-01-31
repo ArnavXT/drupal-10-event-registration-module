@@ -37,7 +37,7 @@ A dedicated dashboard for administrators to:
 Navigate to your Drupal project's `web/modules` directory and create the folder structure as shown below:
 `web/modules/custom/events_manager`
 
-![Folder Structure](screenshots/folder_structure.png)
+![Settings Page](screenshots/folder_structure.png)
 
 ### Step 2: Add Module Files
 Place all the module files (`.info.yml`, `.module`, `src/`, etc.) into this directory.
@@ -55,26 +55,24 @@ ddev drush en events_manager -y
 ## Screenshots of Execution
 
 ### 1. Enable Module
-![Folder Structure](screenshots/add_module.png)
+![Settings Page](screenshots/enable_module.png)
 
 ### 2. Configuration: Configure Global Settings
-![Folder Structure](screenshots/add_email.png)
-![Folder Structure](screenshots/add_email_0.png)
+![Settings Page](screenshots/settings_page0.png)
 
 ### 3. Usage: Add Event Page
-![Folder Structure](screenshots/add_event_page_0.png)
-![Folder Structure](screenshots/add_event_page_1.png)
+![Settings Page](screenshots/Add_event.png)
+![Settings Page](screenshots/Add_event01.png)
 
 ### 4. Usage: Event Registration Page
-![Folder Structure](screenshots/event_reg_0.png)
-![Folder Structure](screenshots/event_reg_1.png)
+![Settings Page](screenshots/registration_form.png)
+![Settings Page](screenshots/registration_form01.png)
 
 ### 5. Admin Management: View Event Registrations
-![Folder Structure](screenshots/event_registrations.png)
+![Settings Page](screenshots/admin_listing.png)
 
 ### 6. Admin Management: Export Data
-![Folder Structure](screenshots/db_0.png)
-![Folder Structure](screenshots/db_1.png)
+![Settings Page](screenshots/admin_listing_download.png)
 
 ## 🗄️ Database Schema
 
