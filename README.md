@@ -1,33 +1,159 @@
-# Events Manager
+# Events Manager Module
 
-A custom Drupal 10 module for managing event registrations.
+A custom Drupal 10 module for managing event registrations. This module allows admins to create events and users to register for them via a custom form. It includes AJAX-dependent fields, CSV export capabilities, and email notifications.
 
-## Features
-- Admin interface to create events with categories and date ranges.
-- Public registration form with AJAX-dependent fields (Category -> Date -> Event).
-- Validation: No special chars, duplicate email check per event.
-- Admin dashboard to view registrants, filter by date/event, and export to CSV.
-- Email notifications for users and admins.
+---
 
-## Installation
-1. Clone this repository into `web/modules/custom/`.
-2. Run `composer install` (if dependencies exist) or ensure structure is correct.
-3. Enable the module via Drush: `drush en events_manager -y`.
-4. The database tables `events_manager_event` and `events_manager_registration` will be created automatically.
+## 📌 Features
 
-## Setup & Configuration
-1. **Global Settings**: Go to `/admin/config/services/events-manager/settings` to configure the Admin Notification Email and enable/disable notifications.
-2. **Add Events**: Go to `/admin/config/services/events-manager/add-event` to create new events. Ensure you set the "Registration Start/End Dates" correctly, as the public form filters events based on the current date.
+### 1. Data Storage (Custom Database)
+The module stores data in two custom database tables:
+* **`events_manager_event`**: Stores event configuration (ID, Name, Category, Dates).
+* **`events_manager_registration`**: Stores user registrations with a foreign key linking to the event.
 
-## Usage
-- **Registration Form**: The public form is located at `/events/register`.
-- **Admin Listing**: View and export registrations at `/admin/content/events-registrations`.
+### 2. Email Notifications (Drupal Mail API)
+Sends automated confirmation emails using the Drupal Mail API:
+* **To User**: Confirms their registration with details (Name, Event Name, Date, Category).
+* **To Admin**: Notifies the administrator of a new signup (configurable).
 
-## Database Schema
-- **events_manager_event**: Stores event metadata (Name, Category, Dates).
-- **events_manager_registration**: Stores participant data with a Foreign Key linking to the event ID.
+### 3. Configuration Page (Config API)
+An admin interface to:
+* Enable/Disable admin notifications.
+* Set the Admin Notification Email address.
+* *Note: Uses Drupal Config API (no hard-coded values).*
 
-## Technical Details
-- Implements `FormBase` and `ConfigFormBase`.
-- Uses Dependency Injection for Database, Config, and Mail services.
-- PSR-4 compliant.
+### 4. Admin Listing Page
+A dedicated dashboard for administrators to:
+* **Filter** registrations by Date and Event Name (using AJAX).
+* **View** participant counts.
+* **Export** the filtered list to CSV.
+* **Secure** access restricted by custom permissions.
+
+---
+
+## 🚀 Installation & Setup
+
+### Step 1: Create the Folder Structure
+Navigate to your Drupal project's `web/modules` directory and create the folder structure as shown below:
+`web/modules/custom/events_manager`
+
+![Folder Structure](screenshots/folder_structure.png)
+
+### Step 2: Add Module Files
+Place all the module files (`.info.yml`, `.module`, `src/`, etc.) into this directory.
+
+### Step 3: Enable the Module
+You can enable the module using Drush or the Drupal Admin Interface.
+
+**Option A: Using Drush (Recommended)**
+Open your terminal in the project root and run:
+```bash
+ddev drush en events_manager -y
+```
+---
+
+## Screenshots of Execution
+
+### 1. Enable Module
+![Folder Structure](screenshots/add_module.png)
+
+### 2. Configuration: Configure Global Settings
+![Folder Structure](screenshots/add_email.png)
+![Folder Structure](screenshots/add_email_0.png)
+
+### 3. Usage: Add Event Page
+![Folder Structure](screenshots/add_event_page_0.png)
+![Folder Structure](screenshots/add_event_page_1.png)
+
+### 4. Usage: Event Registration Page
+![Folder Structure](screenshots/event_reg_0.png)
+![Folder Structure](screenshots/event_reg_1.png)
+
+### 5. Admin Management: View Event Registrations
+![Folder Structure](screenshots/event_registrations.png)
+
+### 6. Admin Management: Export Data
+![Folder Structure](screenshots/db_0.png)
+![Folder Structure](screenshots/db_1.png)
+
+## 🗄️ Database Schema
+
+### `event_registration_event`
+Stores events created by administrators.
+
+**Fields:**
+- `event_name`
+- `category`
+- `event_date`
+- `reg_start_date`
+- `reg_end_date`
+- `created` (timestamp)
+
+---
+
+### `event_registration_entry`
+Stores user registrations for events.
+
+**Fields:**
+- `event_id` (Foreign Key referencing `event_registration_event`)
+- `full_name`
+- `email`
+- `college`
+- `department`
+- `created` (timestamp)
+
+**Constraints:**
+- Unique index on **(`email`, `event_id`)** to prevent duplicate registrations.
+
+---
+
+## ✅ Validation Rules
+
+The registration form enforces the following validations:
+- All required fields must be filled.
+- Text fields do not allow special characters.
+- Email addresses are validated for correct format.
+- Duplicate registrations for the same event are prevented.
+- Registrations are allowed only within the configured registration period.
+
+---
+
+## ⚡ AJAX Functionality
+
+**User Registration Form:**
+- Dynamic filtering in the order:  
+  **Category → Event Date → Event Name**
+
+**Admin Dashboard:**
+- Filter registrations by **Event Date → Event Name**
+- Registration list updates dynamically using AJAX.
+
+---
+
+## ✉️ Email Notifications
+
+Email notifications are implemented using the **Drupal Mail API** (`hook_mail`).
+
+**Emails sent:**
+- Registration confirmation email to the user.
+- Optional notification email to the administrator.
+
+**Configuration:**
+- Admin notification email is configurable via the **Drupal Config API**.
+
+---
+
+## 🔐 Permissions
+
+- Custom permission: **View event registrations**
+- Restricts access to the admin dashboard and registration listings.
+
+---
+
+## 🛠️ Technical Standards
+
+- Compatible with **Drupal 10.x**
+- Built using **Form API**, **Config API**, and **Schema API**
+- Follows **PSR-4 autoloading standards**
+- No contributed modules used
+- Adheres to **Drupal coding standard**
